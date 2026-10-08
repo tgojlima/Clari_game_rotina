@@ -1,0 +1,75 @@
+{
+  "dias": {
+    "segunda_a_sexta": [
+      { "id": "acordar", "hora": "09:30", "atividade": "Acordar", "flexivel": true },
+      { "id": "escovar_dentes_1", "atividade": "Escovar dentes", "pontosBase": 10 },
+      { "id": "arrumar_cama", "atividade": "Arrumar cama", "pontosBase": 10 },
+      { "id": "devocional", "atividade": "Devocional", "pontosBase": 10 },
+      { "id": "cafe", "atividade": "Café da manhã", "pontosBase": 10 },
+      { "id": "estudo", "atividade": "Estudo da matéria do dia", "pontosBase": 10 },
+      { "id": "tv_manha", "atividade": "TV (máx 1h30)", "pontosBase": 0 },
+      { "id": "banho_manha", "atividade": "Banho (se necessário)", "pontosBase": 10 },
+      { "id": "arrumar_lanche", "atividade": "Arrumar lanche", "pontosBase": 10 },
+      { "id": "almoco", "atividade": "Almoço (oração)", "pontosBase": 10 },
+      { "id": "escovar_dentes_2", "atividade": "Escovar dentes", "pontosBase": 10 },
+      { "id": "higiene", "atividade": "Desodorante/perfume", "pontosBase": 10 },
+      { "id": "trocar_escola", "atividade": "Trocar roupa para escola", "pontosBase": 10 },
+      { "id": "escola", "hora_inicio": "12:30", "hora_fim": "17:50", "atividade": "ESCOLA", "pontosBase": 10 },
+      { "id": "lanche_jantar", "atividade": "Lanche/Jantar", "pontosBase": 10 },
+      { "id": "escovar_dentes_3", "atividade": "Escovar dentes", "pontosBase": 10 },
+      { "id": "banho_noite", "atividade": "Banho", "pontosBase": 10 },
+      { "id": "licao_casa", "atividade": "Lição de casa", "pontosBase": 10 },
+      { "id": "tv_noite", "atividade": "TV (máx 1h30)", "pontosBase": 0 },
+      { "id": "brincar", "atividade": "Brincar", "pontosBase": 0 },
+      { "id": "estudo_biblico", "atividade": "Estudo bíblico com a mãe", "pontosBase": 10 },
+      { "id": "escovar_dentes_4", "atividade": "Escovar dentes", "pontosBase": 10 },
+      { "id": "dormir", "hora_limite": "23:30", "atividade": "Dormir", "pontosBase": 10 }
+    ],
+    "sabado": [
+      { "id": "escovar_dentes_1", "atividade": "Escovar dentes", "pontosBase": 10 },
+      { "id": "arrumar_cama", "atividade": "Arrumar cama", "pontosBase": 10 },
+      { "id": "cafe", "atividade": "Café", "pontosBase": 10 },
+      { "id": "lanche_manha", "atividade": "Lanche", "pontosBase": 10 },
+      { "id": "bombeiro", "hora_inicio": "12:40", "hora_fim": "16:30", "atividade": "BOMBEIRO", "pontosBase": 10 },
+      { "id": "almoco", "atividade": "Almoço (oração)", "pontosBase": 10 },
+      { "id": "escovar_dentes_2", "atividade": "Escovar dentes", "pontosBase": 10 },
+      { "id": "banho", "atividade": "Banho", "pontosBase": 10 },
+      { "id": "lanche_jantar", "atividade": "Lanche/Jantar", "pontosBase": 10 },
+      { "id": "dormir", "hora_limite": "23:30", "atividade": "Dormir", "pontosBase": 10 }
+    ],
+    "domingo": [
+      { "id": "acordar", "hora": "06:30", "atividade": "Acordar", "pontosBase": 10 },
+      { "id": "escovar_dentes_1", "atividade": "Escovar dentes", "pontosBase": 10 },
+      { "id": "cafe", "atividade": "Café", "pontosBase": 10 },
+      { "id": "igreja", "hora_inicio": "07:00", "hora_fim": "14:00", "atividade": "IGREJA (PORTA DA PAZ)", "pontosBase": 10 },
+      { "id": "almoco", "atividade": "Almoço (oração)", "pontosBase": 10 },
+      { "id": "escovar_dentes_2", "atividade": "Escovar dentes", "pontosBase": 10 },
+      { "id": "banho", "atividade": "Banho", "pontosBase": 10 },
+      { "id": "lanche_jantar", "atividade": "Lanche/Jantar", "pontosBase": 10 },
+      { "id": "dormir", "hora_limite": "23:30", "atividade": "Dormir", "pontosBase": 10 }
+    ]
+  },
+  "extras": [
+    { "id": "tirar_lixo", "atividade": "Tirar lixo", "pontos": 15 },
+    { "id": "lavar_louca", "atividade": "Lavar louça", "pontos": 15 },
+    { "id": "arrumar_pijama", "atividade": "Arrumar pijama", "pontos": 15 },
+    { "id": "varrer_casa", "atividade": "Varrer casa", "pontos": 15 },
+    { "id": "tirar_po", "atividade": "Tirar pó", "pontos": 15 },
+    { "id": "alimentar_animais", "atividade": "Alimentar animais", "pontos": 15 },
+    { "id": "limpar_caixa_gato", "atividade": "Limpar caixa do gato", "pontos": 15 },
+    { "id": "acordar_domingo_sem_reclamar", "atividade": "Acordar domingo sem reclamar", "pontos": 15 },
+    { "id": "ler_sem_pedir", "atividade": "Ler sem pedir (10 min)", "pontos": 15 },
+    { "id": "decorar_versiculo", "atividade": "Decorar versículo + Kids", "pontos": 15 },
+    { "id": "celular_carregar", "atividade": "Colocar celular para carregar", "pontos": 15 },
+    { "id": "pedido_especifico", "atividade": "Pedido específico dos pais", "multiplicador": 2 }
+  ],
+  "regras": {
+    "pontos_no_horario": 10,
+    "pontos_atraso": 5,
+    "pontos_nao_feita": -3,
+    "bonus_sequencia_dia": 30,
+    "bonus_sequencia_semana": 100,
+    "bonus_fim_de_semana_preenchido": 20,
+    "checkin_diario": 5
+  }
+}

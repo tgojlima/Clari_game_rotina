@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Fonte Retro Pokedex -->
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    
+    <!-- Scripts do Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Efeitos Especiais (Confetes) -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>Bem-vinda!</h2>
+            <p>Faça login para salvar seus pontos!</p>
+            <input type="text" id="login-user" placeholder="E-mail (ex: clarice@fam.com)">
+            <input type="password" id="login-pass" placeholder="Senha Secreta">
+            <button id="login-btn">Entrar no Jogo</button>
+            <p id="login-msg" style="color: red; margin-top: 10px; font-size: 14px;"></p>
+        </div>
+    </div>
+
+    <div id="game-container" class="hidden">
+        <!-- O Canvas onde o mapa top-down 2D será renderizado -->
+        <canvas id="game-canvas" width="800" height="600"></canvas>
+        
+        <!-- UI: Caixa de Diálogo Casual -->
+        <div id="dialog-box" class="hidden">
+            <div id="dialog-portrait"></div>
+            <div id="dialog-content">
+                <h3 id="dialog-name">Mãe</h3>
+                <p id="dialog-text">Bom dia, filha!</p>
+                <div id="dialog-actions" style="margin-top: 10px; display: flex; gap: 10px;">
+                    <button id="dialog-btn-yes" class="hidden" style="background-color: #48bb78;">Fazer (+10 pts)</button>
+                    <button id="dialog-next">Continuar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- UI: Pokedex (Rotina-Dex) -->
+        <div id="pokedex-screen" class="hidden">
+            <div class="dex-header">
+                <span id="dex-time">DATA E HORA</span>
+                <button id="dex-close">X FECHAR</button>
+            </div>
+            <div class="dex-container">
+                <div class="dex-left">
+                    <div class="dex-profile-pic">
+                        <img src="assets/avatares/Clari.jpeg" alt="Clarice">
+                    </div>
+                    <div class="dex-stats">
+                        <p>NOME: CLARICE</p>
+                        <p>PTS HOJE: <span id="dex-pts-hoje">0</span></p>
+                        <p>PTS SEMANA: <span id="dex-pts-semana">0</span></p>
+                    </div>
+                </div>
+                <div class="dex-right">
+                    <div class="dex-tabs" style="display:flex; flex-wrap:wrap; gap:5px;">
+                        <button class="dex-tab active" data-target="tab-objetivos">OBJETIVOS</button>
+                        <button class="dex-tab" data-target="tab-alarmes">ALARMES</button>
+                        <button class="dex-tab" data-target="tab-calendario">CALENDÁRIO</button>
+                        <button class="dex-tab" data-target="tab-pais">PAIS 🔒</button>
+                    </div>
+                    
+                    <div id="tab-objetivos" class="dex-content active">
+                        <h3 style="margin:0 0 10px 0; color:#4a5568;">MEUS OBJETIVOS</h3>
+                        <ul id="dex-goals-list" style="list-style:none; padding:0; margin:0; line-height:1.4; font-size:18px;">
+                            <!-- Populado pelo JS -->
+                        </ul>
+                    </div>
+                    
+                    <div id="tab-alarmes" class="dex-content hidden">
+                        <h3 style="margin:0 0 10px 0; color:#4a5568;">ALARMES E LEMBRETES</h3>
+                        <ul id="dex-alarms-list" style="list-style:none; padding:0; margin:0 0 15px 0; line-height:1.4; font-size:18px;">
+                            <!-- Populado pelo JS -->
+                        </ul>
+                        <div class="dex-form-row">
+                            <input type="time" id="alarm-time">
+                            <input type="text" id="alarm-label" placeholder="Lembrete">
+                            <button id="btn-add-alarm">Add</button>
+                        </div>
+                    </div>
+
+                    <div id="tab-calendario" class="dex-content hidden">
+                        <h3 style="margin:0 0 5px 0; color:#4a5568;">CALENDÁRIO</h3>
+                        
+                        <!-- Controles do Mês -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:#cbd5e1; padding:5px; border-radius:4px;">
+                            <button id="cal-prev" style="cursor:pointer; font-family:'VT323'; font-size:16px;">&lt; Ant</button>
+                            <span id="cal-month-year" style="font-weight:bold; font-size:18px;">Outubro 2026</span>
+                            <button id="cal-next" style="cursor:pointer; font-family:'VT323'; font-size:16px;">Próx &gt;</button>
+                        </div>
+
+                        <!-- Grid do Calendário -->
+                        <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:2px; text-align:center; font-weight:bold; margin-top:5px; font-size:14px; background:#e2e8f0; border-radius:4px;">
+                            <div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div>
+                        </div>
+                        <div id="cal-grid" style="display:grid; grid-template-columns:repeat(7, 1fr); gap:2px; text-align:center; margin-top:2px; font-size:18px;">
+                            <!-- Dias gerados pelo JS -->
+                        </div>
+                        
+                        <!-- Legenda do dia clicado -->
+                        <div id="cal-selected-info" style="min-height:22px; font-size:16px; color:#c53030; margin-top:5px; font-weight:bold; text-align:center;"></div>
+
+                        <hr style="margin: 5px 0;">
+
+                        <!-- Barra de Adicionar Data Abaixo do Calendário -->
+                        <div style="background:#e2e8f0; padding:5px; border-radius:4px; border:2px solid #cbd5e1;">
+                            <h4 style="margin:0 0 5px 0; font-size:16px;">Adicionar Data Especial</h4>
+                            <div class="dex-form-row">
+                                <input type="text" id="date-title" placeholder="Ex: Aniversário Vó" style="flex:1;">
+                                <input type="date" id="date-value" style="width:110px;">
+                                <button id="btn-add-date">Salvar</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="tab-pais" class="dex-content hidden">
+                        <!-- Tela de Senha -->
+                        <div id="pais-lock">
+                            <h3>ACESSO DOS PAIS</h3>
+                            <p>Digite a senha para gerenciar as tarefas.</p>
+                            <input type="password" id="pais-senha" placeholder="****" maxlength="4">
+                            <button id="btn-unlock-pais">Desbloquear</button>
+                            <p id="pais-erro" class="hidden" style="color:red; margin-top:5px;">Senha Incorreta</p>
+                        </div>
+                        
+                        <!-- Conteúdo dos Pais -->
+                        <div id="pais-content" class="hidden">
+                            <div class="dex-form-group">
+                                <h4>Novo Objetivo</h4>
+                                <div class="dex-form-row">
+                                    <input type="text" id="goal-name" placeholder="Qual objetivo?">
+                                    <input type="number" id="goal-points" placeholder="Pontos" style="width:70px;">
+                                    <button id="btn-add-goal">Salvar</button>
+                                </div>
+                            </div>
+
+                            <div class="dex-form-group">
+                                <h4>Nova Atividade no Mapa</h4>
+                                <input type="text" id="task-name" placeholder="Descrição (ex: Ler bíblia)">
+                                <div class="dex-form-row">
+                                    <input type="number" id="task-points" placeholder="Pts" style="width:60px;">
+                                    <select id="task-scenario">
+                                        <option value="room">Apartamento</option>
+                                        <option value="school">Escola</option>
+                                        <option value="church">Igreja</option>
+                                        <option value="firestation">Bombeiro</option>
+                                    </select>
+                                    <select id="task-object">
+                                        <!-- Populado pelo JS -->
+                                    </select>
+                                    <button id="btn-add-task">Salvar</button>
+                                </div>
+                            </div>
+
+                            <div class="dex-form-group">
+                                <h4>Pedido Específico na Cama (30 pts)</h4>
+                                <div class="dex-form-row">
+                                    <input type="text" id="special-req-name" placeholder="Qual é o pedido secreto?">
+                                    <button id="btn-special-request" style="background:#ed8936">Ativar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UI: HUD (Pontuação, Energia, etc) -->
+        <div id="hud">
+            <div id="hud-clock" class="hud-item" style="font-weight:bold;">--/--/---- --:--</div>
+            <div class="hud-item">⭐ Pontos: <span id="score">0</span></div>
+            <div class="hud-item hud-helper">
+                <img src="assets/personagens/Anya_spy_family.jpeg" alt="Anya" class="hud-avatar"> 
+                Ajudante: Anya
+            </div>
+            <button id="btn-music" style="pointer-events: auto; margin-left: 10px; background: #ecc94b; border: 2px solid #222; font-family: 'VT323'; border-radius: 5px; cursor: pointer; padding: 2px 8px;">🔊 Música</button>
+        </div>
+
+        <audio id="bgm-audio" loop></audio>
+
+        <!-- Controles para Celular / Tablet -->
+        <div id="mobile-controls">
+            <button id="btn-up">▲</button>
+            <div class="horizontal-btns">
+                <button id="btn-left">◀</button>
+                <button id="btn-down">▼</button>
+                <button id="btn-right">▶</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
